@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đánh Giá Thể Chất — TKT Method</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0F1A14;
+    --gold: #C9A96E;
+    --gold-light: #DFC08A;
+    --cream: #E8E0D0;
+    --cream-muted: #C8BCA8;
+    --green-deep: #2D4A35;
+    --green-mid: #3D6147;
+    --red-son: #8B2020;
+    --surface: #141F18;
+    --surface-2: #1C2B21;
+    --surface-3: #243329;
+    --border: rgba(201,169,110,0.18);
+    --text-primary: #E8E0D0;
+    --text-muted: #9A9080;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ink);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    text-align: center;
+    padding: 64px 24px 48px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--gold));
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+  .header h1 span { color: var(--gold); }
+  .header-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto 32px;
+    line-height: 1.8;
+  }
+
+  /* ─── PROGRESS ─── */
+  .progress-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .progress-bar-bg {
+    height: 2px;
+    background: var(--surface-3);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--green-mid), var(--gold));
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ─── MAIN CONTAINER ─── */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ─── SECTION CARD ─── */
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-top: 32px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .section-card.active { border-color: rgba(201,169,110,0.4); }
+
+  .section-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .section-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--surface-3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .section-meta { flex: 1; }
+  .section-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+  .section-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .section-score-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--surface-3);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: flex-start;
+    margin-top: 4px;
+    transition: all 0.3s;
+  }
+
+  /* ─── QUESTIONS ─── */
+  .questions-body { padding: 8px 28px 24px; }
+
+  .question-item {
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(201,169,110,0.08);
+  }
+  .question-item:last-child { border-bottom: none; }
+
+  .question-text {
+    font-size: 14px;
+    color: var(--cream);
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .q-num {
+    color: var(--gold);
+    font-weight: 600;
+    margin-right: 6px;
+  }
+
+  .likert {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .likert label {
+    flex: 1;
+    min-width: 52px;
+    cursor: pointer;
+  }
+  .likert input[type="radio"] { display: none; }
+  .likert .opt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 6px;
+    border: 1px solid rgba(201,169,110,0.15);
+    border-radius: 8px;
+    background: var(--surface-2);
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .likert .opt-num {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: color 0.2s;
+    font-family: 'Playfair Display', serif;
+  }
+  .likert .opt-label {
+    font-size: 9.5px;
+    color: var(--text-muted);
+    line-height: 1.3;
+    transition: color 0.2s;
+  }
+  .likert input:checked + .opt {
+    background: var(--green-deep);
+    border-color: var(--gold);
+  }
+  .likert input:checked + .opt .opt-num { color: var(--gold); }
+  .likert input:checked + .opt .opt-label { color: var(--gold-light); }
+  .likert label:hover .opt {
+    border-color: rgba(201,169,110,0.4);
+    background: var(--surface-3);
+  }
+
+  /* ─── ACTIONS ─── */
+  .actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .btn-calculate {
+    background: linear-gradient(135deg, var(--green-deep), var(--green-mid));
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 16px 48px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .btn-calculate:hover {
+    background: linear-gradient(135deg, var(--green-mid), #4A7A58);
+    box-shadow: 0 0 24px rgba(201,169,110,0.2);
+  }
+
+  /* ─── RESULTS ─── */
+  #results { display: none; margin-top: 48px; }
+
+  .results-header {
+    text-align: center;
+    padding: 48px 24px 40px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .results-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(45,74,53,0.4), transparent 70%);
+    pointer-events: none;
+  }
+  .results-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .results-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 32px);
+    color: var(--cream);
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+  .results-header p {
+    font-size: 13px;
+    color: var(--text-muted);
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* ─── RADAR / SCORE VISUAL ─── */
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .score-card.highlight-exact {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, var(--surface), var(--green-deep));
+  }
+  .score-card.highlight-trend {
+    border-color: rgba(201,169,110,0.45);
+    background: linear-gradient(135deg, var(--surface), rgba(45,74,53,0.3));
+  }
+  .score-card.binh-hoa-card {
+    border-color: #4A8C5C;
+    background: linear-gradient(135deg, var(--surface), rgba(45,74,53,0.5));
+  }
+
+  .sc-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .sc-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 14px;
+    line-height: 1.3;
+  }
+  .sc-bar-bg {
+    height: 4px;
+    background: var(--surface-3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .sc-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+    width: 0%;
+  }
+  .fill-normal { background: linear-gradient(to right, var(--green-mid), #5A9E6A); }
+  .fill-exact  { background: linear-gradient(to right, var(--red-son), #C0392B); }
+  .fill-trend  { background: linear-gradient(to right, #A0620A, var(--gold)); }
+  .fill-binh   { background: linear-gradient(to right, var(--green-mid), #6DBF82); }
+
+  .sc-score {
+    font-size: 22px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gold);
+    display: inline-block;
+  }
+  .sc-unit { font-size: 12px; color: var(--text-muted); margin-left: 2px; }
+  .sc-verdict {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 8px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    vertical-align: middle;
+  }
+  .verdict-exact  { background: rgba(139,32,32,0.25); color: #E87070; border: 1px solid rgba(139,32,32,0.4); }
+  .verdict-trend  { background: rgba(201,169,110,0.15); color: var(--gold); border: 1px solid rgba(201,169,110,0.3); }
+  .verdict-none   { background: transparent; color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08); }
+  .verdict-binh   { background: rgba(74,140,92,0.2); color: #6DBF82; border: 1px solid rgba(74,140,92,0.35); }
+
+  /* ─── CONCLUSION BOX ─── */
+  .conclusion-box {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 28px;
+    margin-bottom: 24px;
+  }
+  .conclusion-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--gold);
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  .conclusion-list { list-style: none; }
+  .conclusion-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(201,169,110,0.08);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--cream);
+    line-height: 1.6;
+  }
+  .conclusion-list li:last-child { border-bottom: none; }
+  .conclusion-list li::before {
+    content: '◆';
+    color: var(--gold);
+    font-size: 8px;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .no-deviation {
+    text-align: center;
+    padding: 24px;
+    color: #6DBF82;
+    font-size: 14px;
+  }
+
+  .btn-reset {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: block;
+    margin: 0 auto;
+  }
+  .btn-reset:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ─── ORNAMENT ─── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 32px 0 0;
+    color: var(--border);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .incomplete-msg {
+    background: rgba(139,32,32,0.15);
+    border: 1px solid rgba(139,32,32,0.3);
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-size: 13px;
+    color: #E87070;
+    text-align: center;
+    margin-top: 16px;
+    display: none;
+  }
+
+  /* Smooth scroll */
+  html { scroll-behavior: smooth; }
+
+  @media (max-width: 520px) {
+    .likert .opt-label { display: none; }
+    .section-header { padding: 20px; }
+    .questions-body { padding: 8px 20px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="eyebrow">TKT Method · Y Học Cổ Truyền</div>
+  <h1>Đánh Giá<br><span>9 Loại Thể Chất</span></h1>
+  <p class="header-desc">Bộ công cụ phân loại thể chất theo hệ thống Y học Cổ truyền. Trả lời trung thực — kết quả phản ánh trạng thái hiện tại của bạn.</p>
+  <div class="progress-wrap" style="max-width:480px;margin:0 auto;">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-label">
+      <span id="progressText">0 / 60 câu đã trả lời</span>
+      <span id="progressPct">0%</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- SECTIONS will be injected by JS -->
+<div id="questionnaire"></div>
+
+<div class="divider">Hoàn thành bộ câu hỏi để xem kết quả</div>
+
+<div class="incomplete-msg" id="incompleteMsg">
+  Vui lòng trả lời đầy đủ tất cả các câu hỏi trước khi xem kết quả.
+</div>
+
+<div class="actions">
+  <button class="btn-calculate" onclick="calculate()">Xem Kết Quả Đánh Giá</button>
+</div>
+
+<!-- RESULTS -->
+<div id="results">
+  <div class="results-header">
+    <div class="results-eyebrow">Kết quả phân tích thể chất</div>
+    <h2>Hồ Sơ Thể Chất Của Bạn</h2>
+    <p>Dựa trên thang điểm chuẩn hóa 0–100 của hệ thống phân loại YHCT</p>
+  </div>
+
+  <div class="score-grid" id="scoreGrid"></div>
+
+  <div class="conclusion-box">
+    <h3>Kết Luận Phân Loại</h3>
+    <ul class="conclusion-list" id="conclusionList"></ul>
+  </div>
+
+  <button class="btn-reset" onclick="resetQuiz()">↺ &nbsp;Làm lại từ đầu</button>
+</div>
+
+</div><!-- /container -->
+
+<script>
+const TYPES = [
+  {
+    id: 'A', code: 'Bình Hòa', sub: 'Âm dương khí huyết điều hòa',
+    questions: [
+      { text: 'Bạn có tinh lực dồi dào không?', reverse: false },
+      { text: 'Bạn có dễ cảm thấy mệt mỏi không?', reverse: true },
+      { text: 'Giọng nói của bạn có yếu ớt, không có lực không?', reverse: true },
+      { text: 'Bạn có cảm thấy buồn bã, tâm trạng chán nản không?', reverse: true },
+      { text: 'Bạn có khả năng chịu lạnh kém hơn người bình thường không?', reverse: true },
+      { text: 'Bạn có thể thích ứng với sự thay đổi của môi trường tự nhiên và xã hội bên ngoài không?', reverse: false },
+      { text: 'Bạn có dễ bị mất ngủ không?', reverse: true },
+      { text: 'Bạn có dễ quên (hay quên) không?', reverse: true },
+    ]
+  },
+  {
+    id: 'B', code: 'Khí Hư', sub: 'Nguyên khí không đủ — mệt mỏi, hụt hơi, tự hãn',
+    questions: [
+      { text: 'Bạn có dễ cảm thấy mệt mỏi không?', reverse: false },
+      { text: 'Bạn có dễ bị hụt hơi (thở ngắn, không đủ hơi) không?', reverse: false },
+      { text: 'Bạn có dễ hồi hộp, tim đập nhanh không?', reverse: false },
+      { text: 'Bạn có dễ bị chóng mặt hoặc hoa mắt khi đứng dậy không?', reverse: false },
+      { text: 'Bạn có dễ bị cảm lạnh hơn người khác không?', reverse: false },
+      { text: 'Bạn có thích yên tĩnh, lười nói không?', reverse: false },
+      { text: 'Giọng nói của bạn có yếu ớt, thiếu lực không?', reverse: false },
+      { text: 'Bạn có dễ đổ mồ hôi trộm khi vận động nhiều một chút không?', reverse: false },
+    ]
+  },
+  {
+    id: 'C', code: 'Dương Hư', sub: 'Dương khí không đủ — sợ lạnh, tay chân không ấm',
+    questions: [
+      { text: 'Tay chân của bạn có bị lạnh không?', reverse: false },
+      { text: 'Vùng thượng vị, lưng hoặc thắt lưng, đầu gối của bạn có sợ lạnh không?', reverse: false },
+      { text: 'Bạn có cảm thấy sợ lạnh, mặc nhiều quần áo hơn người khác không?', reverse: false },
+      { text: 'Bạn có khả năng chịu lạnh kém hơn người bình thường không?', reverse: false },
+      { text: 'Bạn có dễ bị cảm lạnh hơn người khác không?', reverse: false },
+      { text: 'Bạn ăn (uống) đồ lạnh có cảm thấy khó chịu hoặc sợ ăn đồ lạnh không?', reverse: false },
+      { text: 'Sau khi bị nhiễm lạnh hoặc ăn đồ lạnh, bạn có dễ bị tiêu chảy không?', reverse: false },
+    ]
+  },
+  {
+    id: 'D', code: 'Âm Hư', sub: 'Âm dịch hao tổn — miệng khô, lòng bàn tay nóng',
+    questions: [
+      { text: 'Bạn có cảm thấy lòng bàn tay, bàn chân nóng không?', reverse: false },
+      { text: 'Bạn có cảm thấy cơ thể hoặc mặt nóng không?', reverse: false },
+      { text: 'Da hoặc môi của bạn có khô không?', reverse: false },
+      { text: 'Màu môi của bạn có đỏ hơn người bình thường không?', reverse: false },
+      { text: 'Bạn có dễ bị táo bón hoặc đại tiện khô không?', reverse: false },
+      { text: 'Hai gò má trên mặt bạn có đỏ hoặc hơi đỏ không?', reverse: false },
+      { text: 'Bạn có cảm thấy mắt khô không?', reverse: false },
+      { text: 'Bạn có cảm thấy miệng khô, họng ráo, luôn muốn uống nước không?', reverse: false },
+    ]
+  },
+  {
+    id: 'E', code: 'Đàm Thấp', sub: 'Đàm thấp ngưng tụ — béo phì, miệng dính nhớt',
+    questions: [
+      { text: 'Bạn có cảm thấy tức ngực hoặc bụng trướng đầy không?', reverse: false },
+      { text: 'Bạn có cảm thấy cơ thể nặng nề, không nhẹ nhàng không?', reverse: false },
+      { text: 'Bụng của bạn có béo mềm không?', reverse: false },
+      { text: 'Bạn có hiện tượng tiết nhiều dầu ở vùng trán không?', reverse: false },
+      { text: 'Mí mắt trên của bạn có sưng hơn người khác (hơi phồng) không?', reverse: false },
+      { text: 'Trong miệng bạn có cảm giác dính nhớt không?', reverse: false },
+      { text: 'Bạn có nhiều đờm, đặc biệt vùng họng thường cảm thấy có đờm mắc kẹt không?', reverse: false },
+      { text: 'Rêu lưỡi của bạn có dày nhớt hoặc có cảm giác rêu lưỡi dày không?', reverse: false },
+    ]
+  },
+  {
+    id: 'F', code: 'Thấp Nhiệt', sub: 'Thấp nhiệt uẩn kết — mặt nhờn, miệng đắng',
+    questions: [
+      { text: 'Trên mặt hoặc mũi của bạn có cảm giác nhờn dính hoặc bóng dầu không?', reverse: false },
+      { text: 'Bạn có dễ bị mụn trứng cá không?', reverse: false },
+      { text: 'Bạn có cảm thấy miệng đắng hoặc trong miệng có mùi lạ không?', reverse: false },
+      { text: 'Bạn có bị đại tiện nhớt dính không thông, cảm giác đi không hết không?', reverse: false },
+      { text: 'Khi tiểu tiện, có cảm giác nóng, nước tiểu đậm màu không?', reverse: false },
+      { text: 'Khí hư của bạn có màu vàng không? (dành cho nữ)', reverse: false },
+      { text: 'Vùng bìu của bạn có ẩm ướt không? (dành cho nam)', reverse: false },
+    ]
+  },
+  {
+    id: 'G', code: 'Huyết Ứ', sub: 'Huyết vận hành không thông — da sạm, lưỡi tím',
+    questions: [
+      { text: 'Da của bạn có tự nhiên xuất hiện các vết bầm tím, vết máu tụ không?', reverse: false },
+      { text: 'Trên da bạn có các sợi tia máu nhỏ màu đỏ không?', reverse: false },
+      { text: 'Trên cơ thể bạn có chỗ nào bị đau không?', reverse: false },
+      { text: 'Sắc mặt của bạn có tối sạm, hoặc dễ xuất hiện các đốm nâu không?', reverse: false },
+      { text: 'Bạn có dễ bị thâm quầng mắt không?', reverse: false },
+      { text: 'Bạn có dễ quên (hay quên) không?', reverse: false },
+      { text: 'Màu môi của bạn có thiên về tối không?', reverse: false },
+    ]
+  },
+  {
+    id: 'H', code: 'Khí Uất', sub: 'Khí cơ ứ trệ — uất ức, lo nghĩ, thở dài',
+    questions: [
+      { text: 'Bạn có cảm thấy buồn bã, tâm trạng trầm xuống không?', reverse: false },
+      { text: 'Bạn có dễ căng thẳng tinh thần, lo lắng bồn chồn không?', reverse: false },
+      { text: 'Bạn có hay đa sầu đa cảm, tình cảm yếu đuối không?', reverse: false },
+      { text: 'Bạn có dễ cảm thấy sợ hãi hoặc dễ bị giật mình không?', reverse: false },
+      { text: 'Bạn có bị đau tức vùng sườn hoặc căng tức ngực không?', reverse: false },
+      { text: 'Bạn có hay thở dài vô cớ không?', reverse: false },
+      { text: 'Bạn có cảm giác vướng dị vật ở vùng họng, khạc không ra, nuốt không xuống không?', reverse: false },
+    ]
+  },
+  {
+    id: 'I', code: 'Đặc Biệt', sub: 'Tiên thiên thất thường — dị ứng, phản ứng đặc biệt',
+    questions: [
+      { text: 'Bạn có hắt hơi ngay cả khi không bị cảm không?', reverse: false },
+      { text: 'Bạn có bị nghẹt mũi, chảy nước mũi ngay cả khi không bị cảm không?', reverse: false },
+      { text: 'Bạn có hiện tượng ho, khó thở do thay đổi mùa hoặc mùi lạ không?', reverse: false },
+      { text: 'Bạn có dễ bị dị ứng (thuốc, thức ăn, mùi hương, phấn hoa, thời tiết) không?', reverse: false },
+      { text: 'Da của bạn có dễ nổi mề đay không?', reverse: false },
+      { text: 'Da của bạn có từng xuất hiện ban xuất huyết do dị ứng không?', reverse: false },
+      { text: 'Da của bạn có bị đỏ và để lại vết xước khi gãi không?', reverse: false },
+    ]
+  },
+];
+
+const LABELS = ['Không', 'Rất ít', 'Thỉnh thoảng', 'Thường xuyên', 'Luôn luôn'];
+
+// Build questionnaire
+const qEl = document.getElementById('questionnaire');
+TYPES.forEach((t, ti) => {
+  const card = document.createElement('div');
+  card.className = 'section-card';
+  card.id = `card-${t.id}`;
+
+  let questionsHTML = t.questions.map((q, qi) => {
+    const vals = q.reverse ? [5,4,3,2,1] : [1,2,3,4,5];
+    const opts = LABELS.map((lbl, li) => `
+      <label>
+        <input type="radio" name="q_${t.id}_${qi}" value="${vals[li]}" onchange="onAnswer()">
+        <div class="opt">
+          <span class="opt-num">${li+1}</span>
+          <span class="opt-label">${lbl}</span>
+        </div>
+      </label>
+    `).join('');
+    return `
+      <div class="question-item">
+        <div class="question-text"><span class="q-num">${qi+1}.</span>${q.text}</div>
+        <div class="likert">${opts}</div>
+      </div>
+    `;
+  }).join('');
+
+  card.innerHTML = `
+    <div class="section-header">
+      <div class="section-badge">${t.id}</div>
+      <div class="section-meta">
+        <div class="section-name">Thể Chất ${t.code}</div>
+        <div class="section-sub">${t.sub}</div>
+      </div>
+      <div class="section-score-badge" id="badge-${t.id}">—</div>
+    </div>
+    <div class="questions-body">${questionsHTML}</div>
+  `;
+  qEl.appendChild(card);
+});
+
+const totalQ = TYPES.reduce((s, t) => s + t.questions.length, 0);
+
+function onAnswer() {
+  let answered = 0;
+  TYPES.forEach(t => {
+    t.questions.forEach((q, qi) => {
+      if (document.querySelector(`input[name="q_${t.id}_${qi}"]:checked`)) answered++;
+    });
+  });
+  document.getElementById('progressFill').style.width = (answered/totalQ*100) + '%';
+  document.getElementById('progressText').textContent = `${answered} / ${totalQ} câu đã trả lời`;
+  document.getElementById('progressPct').textContent = Math.round(answered/totalQ*100) + '%';
+
+  // Live score per card
+  TYPES.forEach(t => {
+    let raw = 0, cnt = 0;
+    t.questions.forEach((q, qi) => {
+      const sel = document.querySelector(`input[name="q_${t.id}_${qi}"]:checked`);
+      if (sel) { raw += parseInt(sel.value); cnt++; }
+    });
+    if (cnt === t.questions.length) {
+      const converted = ((raw - t.questions.length) / (t.questions.length * 4)) * 100;
+      document.getElementById(`badge-${t.id}`).textContent = Math.round(converted) + ' điểm';
+    }
+  });
+}
+
+function getScores() {
+  return TYPES.map(t => {
+    let raw = 0, complete = true;
+    t.questions.forEach((q, qi) => {
+      const sel = document.querySelector(`input[name="q_${t.id}_${qi}"]:checked`);
+      if (sel) raw += parseInt(sel.value);
+      else complete = false;
+    });
+    const n = t.questions.length;
+    const converted = complete ? ((raw - n) / (n * 4)) * 100 : null;
+    return { ...t, raw, converted, complete };
+  });
+}
+
+function calculate() {
+  const scores = getScores();
+  const incomplete = scores.filter(s => !s.complete);
+  if (incomplete.length > 0) {
+    document.getElementById('incompleteMsg').style.display = 'block';
+    incomplete[0] && document.getElementById(`card-${incomplete[0].id}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  document.getElementById('incompleteMsg').style.display = 'none';
+
+  // Classification
+  const scoreA = scores.find(s => s.id === 'A').converted;
+  const others = scores.filter(s => s.id !== 'A');
+
+  const maxOther = Math.max(...others.map(s => s.converted));
+
+  let binhHoaStatus = 'none';
+  if (scoreA >= 60 && others.every(s => s.converted < 30)) binhHoaStatus = 'exact';
+  else if (scoreA >= 60 && others.every(s => s.converted < 40)) binhHoaStatus = 'trend';
+
+  // Render score grid
+  const grid = document.getElementById('scoreGrid');
+  grid.innerHTML = '';
+  scores.forEach(s => {
+    const pct = Math.round(s.converted);
+    let cardClass = 'score-card';
+    let fillClass = 'fill-normal';
+    let verdict = '', verdictClass = 'verdict-none';
+
+    if (s.id === 'A') {
+      if (binhHoaStatus === 'exact') { cardClass += ' binh-hoa-card'; fillClass = 'fill-binh'; verdict = 'Bình Hòa'; verdictClass = 'verdict-binh'; }
+      else if (binhHoaStatus === 'trend') { cardClass += ' highlight-trend'; fillClass = 'fill-trend'; verdict = 'Xu hướng'; verdictClass = 'verdict-trend'; }
+      else { verdict = 'Xem xét'; verdictClass = 'verdict-none'; }
+    } else {
+      if (pct >= 40) { cardClass += ' highlight-exact'; fillClass = 'fill-exact'; verdict = 'Thiên lệch'; verdictClass = 'verdict-exact'; }
+      else if (pct >= 30) { cardClass += ' highlight-trend'; fillClass = 'fill-trend'; verdict = 'Xu hướng'; verdictClass = 'verdict-trend'; }
+      else { verdict = 'Bình thường'; verdictClass = 'verdict-none'; }
+    }
+
+    grid.innerHTML += `
+      <div class="${cardClass}">
+        <div class="sc-label">Loại ${s.id}</div>
+        <div class="sc-name">${s.code}</div>
+        <div class="sc-bar-bg">
+          <div class="sc-bar-fill ${fillClass}" data-width="${Math.min(pct,100)}" style="width:0%"></div>
+        </div>
+        <div>
+          <span class="sc-score">${pct}</span><span class="sc-unit">/ 100</span>
+          <span class="sc-verdict ${verdictClass}">${verdict}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  // Animate bars
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.sc-bar-fill').forEach(el => {
+      el.style.width = el.dataset.width + '%';
+    });
+  });
+
+  // Conclusions
+  const conclusions = [];
+  if (binhHoaStatus === 'exact') {
+    conclusions.push('<strong>Thể chất Bình Hòa</strong> — Âm dương khí huyết điều hòa, đây là thể chất lý tưởng. Duy trì lối sống cân bằng và chế độ ăn uống điều độ.');
+  } else if (binhHoaStatus === 'trend') {
+    conclusions.push('<strong>Về cơ bản là Thể chất Bình Hòa</strong> — tuy nhiên cần chú ý các thể chất có xu hướng thiên lệch dưới đây.');
+  } else {
+    if (binhHoaStatus === 'none' && scoreA < 60) {
+      conclusions.push('Thể chất Bình Hòa <strong>chưa đạt ngưỡng</strong> (< 60 điểm) — cần chú trọng điều chỉnh các thể chất thiên lệch.');
+    }
+  }
+
+  const exact = others.filter(s => s.converted >= 40);
+  const trend = others.filter(s => s.converted >= 30 && s.converted < 40);
+
+  exact.forEach(s => {
+    conclusions.push(`<strong>Thể chất ${s.code} (Loại ${s.id}) — Chính xác thiên lệch (${Math.round(s.converted)} điểm)</strong>: ${getDesc(s.id)}`);
+  });
+  trend.forEach(s => {
+    conclusions.push(`<strong>Xu hướng Thể chất ${s.code} (Loại ${s.id}) (${Math.round(s.converted)} điểm)</strong>: ${getDesc(s.id)}`);
+  });
+
+  const listEl = document.getElementById('conclusionList');
+  if (conclusions.length === 0) {
+    listEl.innerHTML = '<div class="no-deviation">✓ Không phát hiện thể chất thiên lệch đáng kể.</div>';
+  } else {
+    listEl.innerHTML = conclusions.map(c => `<li>${c}</li>`).join('');
+  }
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function getDesc(id) {
+  const map = {
+    B: 'Nguyên khí bất túc. Tập trung ích khí kiện tỳ: đậu tương, thịt gà; tránh rau muống, củ cải sống.',
+    C: 'Dương khí suy giảm. Ưu tiên thực phẩm ôn bổ: thịt bò, thịt dê; hạn chế đồ sống lạnh.',
+    D: 'Âm dịch hao tổn. Bổ âm nhuận táo: thịt vịt, đậu xanh, bí đao; tránh đồ ôn táo như thịt dê, ớt.',
+    E: 'Đàm thấp ngưng kết. Ăn thanh đạm, nhiều bí đao; kiên trì vận động để hoá đàm.',
+    F: 'Thấp nhiệt uẩn kết. Ăn ngọt hàn: đậu đỏ, dưa chuột, ngó sen; phù hợp bơi lội, chạy bộ.',
+    G: 'Huyết vận không thông. Ăn sơn tra, dấm; tham gia khiêu vũ, đi bộ rèn luyện tuần hoàn.',
+    H: 'Khí cơ uất kết. Ăn hoa hiên, hoa hồng, sơn tra; cần tăng cường hoạt động cộng đồng, tránh ở trong nhà.',
+    I: 'Thể chất dị ứng đặc biệt. Ích khí cố biểu; chú ý vệ sinh môi trường sống, tránh tác nhân gây dị ứng.',
+  };
+  return map[id] || '';
+}
+
+function resetQuiz() {
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.querySelectorAll('.section-score-badge').forEach(b => b.textContent = '—');
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('progressText').textContent = `0 / ${totalQ} câu đã trả lời`;
+  document.getElementById('progressPct').textContent = '0%';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('incompleteMsg').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
